@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GetHTMLTitle.iml" filepath="$PROJECT_DIR$/GetHTMLTitle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ExtractTitleFromHTML.iml" filepath="$PROJECT_DIR$/ExtractTitleFromHTML.iml" />
     </modules>
   </component>
 </project>
