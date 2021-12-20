@@ -12,8 +12,10 @@ import java.util.regex.Pattern;
 public class WebScan {
 
     public void extractTitle(String webAddress) throws IOException {
+        webAddress = normalizeUrl(webAddress);
         String htmlContent = extractHtmlContent(webAddress);
         printTitleToConsole(htmlContent);
+        printAllLinks(htmlContent);
     }
 
     private String extractHtmlContent(String webAddress) throws IOException {
@@ -41,7 +43,28 @@ public class WebScan {
         Matcher matcher = pattern.matcher(htmlContent);
 
         while (matcher.find()) {
-            System.out.println(matcher.group(1));
+            System.out.println("Title: " + matcher.group(1));
         }
+    }
+
+    private void printAllLinks(String htmlContent) {
+        Pattern pattern = Pattern.compile("<a href=\"(.*?)\"");
+        Matcher matcher = pattern.matcher(htmlContent);
+        int i = 0;
+        while (matcher.find()) {
+            String link = matcher.group(1);
+            if (!link.equals("#")){
+                System.out.println("Link: " + link);
+                i++;
+            }
+        }
+        System.out.println("total:" + i);
+    }
+
+    private String normalizeUrl(String link){
+        if (!link.startsWith("https://") && !link.startsWith("http://")){
+            return "https://" + link;
+        }
+        return link;
     }
 }
