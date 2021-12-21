@@ -6,13 +6,21 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WebScan {
 
-    public void extractTitle(String webAddress) throws IOException {
+    private static final Set<String> visitedLinkCache = new HashSet<>();
+
+    public void scanWebAddress(String webAddress) throws IOException {
         webAddress = normalizeUrl(webAddress);
+        if (visitedLinkCache.contains(webAddress)){
+            return;
+        }
+        visitedLinkCache.add(webAddress);
         String htmlContent = extractHtmlContent(webAddress);
         printTitleToConsole(htmlContent);
         printAllLinks(htmlContent);
@@ -22,7 +30,7 @@ public class WebScan {
         String line;
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader bufferedReader = readUrl(webAddress);
-        while ((line = bufferedReader.readLine()) != null) {
+         while ((line = bufferedReader.readLine()) != null) {
             stringBuilder.append(line);
         }
         bufferedReader.close();
@@ -74,11 +82,11 @@ public class WebScan {
 
     private void diveIntoLinkAndScanAgain(String diveLink) throws IOException {
         WebScan diveDeeper = new WebScan();
-        diveDeeper.extractHtmlContent(diveLink);
+        diveDeeper.scanWebAddress(diveLink);
     }
 
     private String normalizeUrl(String link){
-        if (link.startsWith("https://") && !link.startsWith("http://")){
+        if (!link.startsWith("https://") && !link.startsWith("http://")){
             return "https://" + link;
         }
         return link;
